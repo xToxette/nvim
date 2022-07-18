@@ -82,8 +82,8 @@ vim.opt.mouse = 'a'
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.expandtab = true
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
 vim.opt.number = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -156,12 +156,23 @@ cmp.setup({
       select = false,
     }),
   }),
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-  }, {
-    { name = 'buffer' },
-  })
+  sources = {
+    { name = 'nvim_lsp', priority = 3, keyword_length = 0 },
+    { name = 'luasnip', priority = 2 },
+    { name = 'buffer', priority = 1 },
+  },
+  formatting = {
+    fiels = {'menu', 'abbr', 'kind'},
+    format = function(entry, item)
+        local menu_icon = {
+            nvim_lsp = 'λ',
+            luasnip = '⋗',
+            buffer = 'Ω',
+        }
+    	item.menu = menu_icon[entry.source.name]
+	return item
+    end,
+  },
 })
 
 -- Now setting up lsp
@@ -174,6 +185,7 @@ vim.keymap.set('n', '<space>e', vim.diagnostic.show, opts)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<leader>dd', "<cmd>Telescope diagnostics<CR>", opts)
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
 
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
@@ -230,6 +242,11 @@ lspconfig.rust_analyzer.setup{
 require('rust-tools').setup({})
 
 lspconfig.omnisharp.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+
+lspconfig.jdtls.setup{
   on_attach = on_attach,
   capabilities = capabilities,
 }
