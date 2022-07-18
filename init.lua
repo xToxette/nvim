@@ -1,5 +1,3 @@
-local vim = vim
-
 local execute = vim.api.nvim_command
 local fn = vim.fn
 
@@ -31,6 +29,31 @@ require('packer').startup(function(use)
   use 'marko-cerovac/material.nvim'
   use 'ellisonleao/gruvbox.nvim'
 
+  -- Getting the nvim-tree plugin that makes
+  -- Nvim be able to display a directory tree
+  -- at the side
+  use {
+    'kyazdani42/nvim-tree.lua',
+    requires = {
+      'kyazdani42/nvim-web-devicons'
+    },
+    tag = 'nightly'
+  }
+
+  -- Getting a magic like plugin for neovim
+  use {
+    'TimUntersberger/neogit',
+    config = function()
+      local opts = {noremap=true, silent=true}
+      require('neogit').setup {
+        vim.keymap.set('n', '<leader>gm', "<cmd>Neogit<CR>", opts),
+      }
+    end,
+    requires = {
+      'nvim-lua/plenary.nvim'
+    }
+  }
+
   -- Plugins for setting up the lsp that is built in with
   -- neovim.
   use 'williamboman/nvim-lsp-installer'
@@ -57,11 +80,19 @@ require('packer').startup(function(use)
     'nvim-telescope/telescope.nvim',
     requires = { {'nvim-lua/plenary.nvim'} }
   }
+  use {
+    'ahmedkhalf/project.nvim',
+    config = function()
+      require("project_nvim").setup {
+        -- setup custom settings for project.nvim
+      }
+    end
+  }
+
 end)
 
 
 -- Default options
-
 require('material').setup({
   contrast = {
     floating_windows = true,
@@ -119,15 +150,27 @@ require('material').setup({
   }
 })
 
+
+-- setting up nvim-tree
+local opts = { noremap=true, silent=true }
+
+require('nvim-tree').setup({
+  vim.keymap.set('n', '<leader>tt', "<cmd>NvimTreeToggle<CR>", opts),
+  vim.keymap.set('n', '<leader>tf', "<cmd>NvimTreeFocus<CR>", opts)
+})
+
 -- =======================================
 -- Setting up Telescope
 -- =======================================
 
-local opts = { noremap=true, silent=true }
+require('telescope').load_extension('projects');
+
 vim.keymap.set('n', '<leader>ff', "<cmd>Telescope find_files<CR>", opts)
+vim.keymap.set('n', '<leader>gf', "<cmd>Telescope git_files<CR>", opts)
 vim.keymap.set('n', '<leader>fg', "<cmd>Telescope live_grep<CR>", opts)
 vim.keymap.set('n', '<leader>fb', "<cmd>Telescope buffers<CR>", opts)
 vim.keymap.set('n', '<leader>fh', "<cmd>Telescope help_tags<CR>", opts)
+vim.keymap.set('n', '<leader>pp', "<cmd>Telescope projects<CR>", opts)
 
 
 -- =======================================
@@ -157,7 +200,7 @@ cmp.setup({
     }),
   }),
   sources = {
-    { name = 'nvim_lsp', priority = 3, keyword_length = 0 },
+    { name = 'nvim_lsp', priority = 3, keyword_length = 1 },
     { name = 'luasnip', priority = 2 },
     { name = 'buffer', priority = 1 },
   },
