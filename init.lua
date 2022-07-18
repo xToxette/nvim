@@ -25,10 +25,19 @@ packer.init({
 -- Plugin setups are found below this funtion
 require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim', opt = true }
-  use 'nvim-treesitter/nvim-treesitter'
-  use 'marko-cerovac/material.nvim'
-  use 'ellisonleao/gruvbox.nvim'
 
+  use 'nvim-treesitter/nvim-treesitter'
+  use 'ellisonleao/gruvbox.nvim'
+  use {
+    'marko-cerovac/material.nvim',
+    config = function()
+      require('material').setup({
+        contrast = {
+          floating_windows = true,
+        }
+      })
+    end,
+  }
   -- Getting the nvim-tree plugin that makes
   -- Nvim be able to display a directory tree
   -- at the side
@@ -37,10 +46,30 @@ require('packer').startup(function(use)
     requires = {
       'kyazdani42/nvim-web-devicons'
     },
-    tag = 'nightly'
+    tag = 'nightly',
+    config = function()
+      local opts = { noremap=true, silent=true }
+      require('nvim-tree').setup {
+        vim.keymap.set('n', '<leader>tt', "<cmd>NvimTreeToggle<CR>", opts),
+        vim.keymap.set('n', '<leader>tf', "<cmd>NvimTreeFocus<CR>", opts),
+      }
+    end
   }
 
-  -- Getting a magic like plugin for neovim
+  -- Plugin that enables electric pairing for
+  -- things like brackets
+  use {
+    'windwp/nvim-autopairs',
+    config = function()
+      require('nvim-autopairs').setup({
+        check_ts = true,
+      })
+    end
+  }
+
+  -- Neogit is a magit like plugin for neovim. Here
+  -- I setup the plugin with a keybind to access the
+  -- magit menu
   use {
     'TimUntersberger/neogit',
     config = function()
@@ -67,37 +96,37 @@ require('packer').startup(function(use)
   use 'saadparwaiz1/cmp_luasnip'
   use 'nvim-treesitter/nvim-treesitter-refactor'
 
-  -- Rust plugins
   use 'simrat39/rust-tools.nvim'
 
-  -- Snippets
   use 'L3MON4D3/LuaSnip'
   use 'rafamadriz/friendly-snippets'
 
-  use 'windwp/nvim-autopairs'
-
   use {
     'nvim-telescope/telescope.nvim',
-    requires = { {'nvim-lua/plenary.nvim'} }
-  }
-  use {
-    'ahmedkhalf/project.nvim',
+    requires = { {'nvim-lua/plenary.nvim'} },
     config = function()
-      require("project_nvim").setup {
-        -- setup custom settings for project.nvim
-      }
+      local opts = {noremap=true, silent=true}
+      vim.keymap.set('n', '<leader>ff', "<cmd>Telescope find_files<CR>", opts)
+      vim.keymap.set('n', '<leader>gf', "<cmd>Telescope git_files<CR>", opts)
+      vim.keymap.set('n', '<leader>fg', "<cmd>Telescope live_grep<CR>", opts)
+      vim.keymap.set('n', '<leader>fb', "<cmd>Telescope buffers<CR>", opts)
+      vim.keymap.set('n', '<leader>fh', "<cmd>Telescope help_tags<CR>", opts)
     end
   }
 
+  use {
+    'ahmedkhalf/project.nvim',
+    requires = 'nvim-telescope/telescope.nvim',
+    config = function()
+      require("project_nvim").setup {
+        -- setup custom settings for project.nvim
+        require('telescope').load_extension('projects'),
+        vim.keymap.set('n', '<leader>pp', "<cmd>Telescope projects<CR>", opts)
+      }
+    end
+  }
 end)
 
-
--- Default options
-require('material').setup({
-  contrast = {
-    floating_windows = true,
-  },
-})
 
 vim.cmd 'set termguicolors'
 
@@ -137,40 +166,6 @@ treesitterconfig.setup {
     enable = true,
   }
 }
-
--- autopairs setup
-require("nvim-autopairs").setup({
-  check_ts = true,
-})
-
--- Custom Settings for the material theme
-require('material').setup({
-  contrast = {
-    floating_windows = true,
-  }
-})
-
-
--- setting up nvim-tree
-local opts = { noremap=true, silent=true }
-
-require('nvim-tree').setup({
-  vim.keymap.set('n', '<leader>tt', "<cmd>NvimTreeToggle<CR>", opts),
-  vim.keymap.set('n', '<leader>tf', "<cmd>NvimTreeFocus<CR>", opts)
-})
-
--- =======================================
--- Setting up Telescope
--- =======================================
-
-require('telescope').load_extension('projects');
-
-vim.keymap.set('n', '<leader>ff', "<cmd>Telescope find_files<CR>", opts)
-vim.keymap.set('n', '<leader>gf', "<cmd>Telescope git_files<CR>", opts)
-vim.keymap.set('n', '<leader>fg', "<cmd>Telescope live_grep<CR>", opts)
-vim.keymap.set('n', '<leader>fb', "<cmd>Telescope buffers<CR>", opts)
-vim.keymap.set('n', '<leader>fh', "<cmd>Telescope help_tags<CR>", opts)
-vim.keymap.set('n', '<leader>pp', "<cmd>Telescope projects<CR>", opts)
 
 
 -- =======================================
