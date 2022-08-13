@@ -1,3 +1,5 @@
+vim = vim
+
 local execute = vim.api.nvim_command
 local fn = vim.fn
 
@@ -26,18 +28,9 @@ packer.init({
 require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim', opt = true }
 
-  use 'nvim-treesitter/nvim-treesitter'
   use 'ellisonleao/gruvbox.nvim'
-  use {
-    'marko-cerovac/material.nvim',
-    config = function()
-      require('material').setup({
-        contrast = {
-          floating_windows = true,
-        }
-      })
-    end,
-  }
+  use 'marko-cerovac/material.nvim'
+
   -- Getting the nvim-tree plugin that makes
   -- Nvim be able to display a directory tree
   -- at the side
@@ -83,24 +76,24 @@ require('packer').startup(function(use)
     }
   }
 
-  -- Plugins for setting up the lsp that is built in with
-  -- neovim.
-  use 'williamboman/nvim-lsp-installer'
-  use 'neovim/nvim-lspconfig'
-  use 'folke/lsp-colors.nvim'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-cmdline'
-  use 'saadparwaiz1/cmp_luasnip'
-  use 'nvim-treesitter/nvim-treesitter-refactor'
 
-  use 'simrat39/rust-tools.nvim'
+  -- Treesitter is a almost a required plugin for neovim
+  -- that makes reading code a lot better.
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    config = function()
+      require('nvim-treesitter.configs').setup {
+        ensure_installed = { "c", "lua", "rust", "c_sharp", "python", "bash", "java" },
+        sync_install = false,
+        highlight = {
+          enable = true,
+        }
+      }
+    end
+  }
 
-  use 'L3MON4D3/LuaSnip'
-  use 'rafamadriz/friendly-snippets'
 
+  -- Telescope makes finding files in your project easy. 
   use {
     'nvim-telescope/telescope.nvim',
     requires = { {'nvim-lua/plenary.nvim'} },
@@ -114,10 +107,16 @@ require('packer').startup(function(use)
     end
   }
 
+
+  -- Project is a plugin that makes sure your vim is rooted at the
+  -- project's root of the project you just opened. It also keeps
+  -- track of their location, and integrating it with telescope
+  -- makes opening your projects really easy
   use {
     'ahmedkhalf/project.nvim',
     requires = 'nvim-telescope/telescope.nvim',
     config = function()
+      local opts = {noremap=true, silent=true}
       require("project_nvim").setup {
         -- setup custom settings for project.nvim
         require('telescope').load_extension('projects'),
@@ -125,17 +124,53 @@ require('packer').startup(function(use)
       }
     end
   }
+
+
+
+  -- All the plugins below here are too complicated to setup
+  -- inside the packer config, so the setup is found at the
+  -- bottom of this init.lua file
+  use 'williamboman/nvim-lsp-installer'
+  use 'neovim/nvim-lspconfig'
+  use 'folke/lsp-colors.nvim'
+  use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/nvim-cmp'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-path'
+  use 'hrsh7th/cmp-cmdline'
+  use 'saadparwaiz1/cmp_luasnip'
+  use 'ray-x/lsp_signature.nvim'
+  use 'nvim-treesitter/nvim-treesitter-refactor'
+
+  use 'simrat39/rust-tools.nvim'
+
+  use 'L3MON4D3/LuaSnip'
+  use 'rafamadriz/friendly-snippets'
+
 end)
 
 
+-- =======================================
+-- Setting up the theme
+-- =======================================
+-- Under here is a temporary material setup.
+-- I am still trying to figure out how to put
+-- it into material's packer config
+require('material').setup({
+  contrast = {
+    sidebars = true,
+    floating_windows = true,
+  },
+})
 vim.cmd 'set termguicolors'
-
 vim.g.material_style = "darker"
 vim.cmd 'colorscheme material'
---vim.opt.background = "dark"
---vim.cmd 'colorscheme gruvbox'
 
 
+
+-- =======================================
+-- Setting up default vim settings.
+-- =======================================
 vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 vim.opt.laststatus = 3
 vim.opt.mouse = 'a'
@@ -156,16 +191,6 @@ vim.opt.undofile = true
 vim.cmd('filetype plugin on')
 vim.opt.backup = false
 
-
--- Config for the nvim-treesitter plugin
-local treesitterconfig = require'nvim-treesitter.configs'
-treesitterconfig.setup {
-  ensure_installed = { "c", "lua", "rust", "c_sharp", "python", "bash" },
-  sync_install = false,
-  highlight = {
-    enable = true,
-  }
-}
 
 
 -- =======================================
@@ -213,10 +238,10 @@ cmp.setup({
   },
 })
 
+
+
 -- Now setting up lsp
 require("nvim-lsp-installer").setup {}
-
-
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '<space>qq', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '<space>e', vim.diagnostic.show, opts)
@@ -251,6 +276,14 @@ local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protoco
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  require("lsp_signature").on_attach({
+    bind = true,
+    hint_enable = false,
+    handler_opts = {
+      border = "none"
+    }
+  }, bufnr)
 
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
