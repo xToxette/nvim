@@ -159,7 +159,7 @@ end)
 require('material').setup({
   contrast = {
     sidebars = true,
-    floating_windows = true,
+    floating_windows = false,
   },
 })
 vim.cmd 'set termguicolors'
@@ -177,8 +177,8 @@ vim.opt.mouse = 'a'
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.expandtab = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
 vim.opt.number = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -206,8 +206,8 @@ cmp.setup({
     end,
   },
   window = {
-    --completion = cmp.config.window.bordered(),
-    --documentation = cmp.config.window.bordered(),
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
   },
   mapping = cmp.mapping.preset.insert({
     ["<C-p>"] = cmp.mapping.select_prev_item(),
@@ -279,9 +279,12 @@ local on_attach = function(client, bufnr)
 
   require("lsp_signature").on_attach({
     bind = true,
-    hint_enable = false,
+    floating_window = true,
+    hint_enable = true,
+    zindex = 10,
+    toggle_key = '<M-x>',
     handler_opts = {
-      border = "none"
+      border = "rounded"
     }
   }, bufnr)
 
@@ -318,6 +321,11 @@ lspconfig.omnisharp.setup{
 }
 
 lspconfig.jdtls.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+
+lspconfig.pyright.setup{
   on_attach = on_attach,
   capabilities = capabilities,
 }
