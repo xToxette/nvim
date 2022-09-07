@@ -30,6 +30,10 @@ require('packer').startup(function(use)
 
   use 'ellisonleao/gruvbox.nvim'
   use 'marko-cerovac/material.nvim'
+  use 'shaeinst/roshnivim-cs'
+  use 'Mofiqul/adwaita.nvim'
+  use 'EdenEast/nightfox.nvim'
+  use 'J0sueTM/gruber-darker-vim'
 
   -- Getting the nvim-tree plugin that makes
   -- Nvim be able to display a directory tree
@@ -162,11 +166,11 @@ require('material').setup({
     floating_windows = false,
   },
 })
-vim.cmd 'set termguicolors'
-vim.g.material_style = "darker"
-vim.cmd 'colorscheme material'
-
-
+--vim.cmd 'set termguicolors'
+--vim.g.material_style = "darker"
+--vim.cmd 'colorscheme material'
+--vim.cmd 'colorscheme adwaita'
+vim.cmd 'colorscheme carbonfox'
 
 -- =======================================
 -- Setting up default vim settings.
