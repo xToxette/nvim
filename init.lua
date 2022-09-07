@@ -205,7 +205,19 @@ vim.opt.undofile = true
 vim.cmd('filetype plugin on')
 vim.opt.backup = false
 
-
+-- =======================================
+-- Setting up keybindings with WhichKey
+-- =======================================
+local wk = require('which-key')
+wk.register({
+  ["<leader>d"] = { name = "+diagnostics" },
+  ["<leader>de"] = { vim.diagnostic.open_float, "Diagnostics open_float"},
+  ["<leader>ds"] = { vim.diagnostic.show, "Diagnostics show"},
+  ["<leader>dp"] = { vim.diagnostic.goto_prev, "Diagnostics goto_prev"},
+  ["<leader>dn"] = { vim.diagnostic.goto_next, "Diagnostics goto_next"},
+  ["<leader>dd"] = { "<cmd>Telescope diagnostics<CR>", "Diagnostics telescope"},
+  ["<leader>da"] = { vim.lsp.buf.code_action, "Diagnostics code_action"},
+})
 
 -- =======================================
 -- Setting up LSP and Autocomplete
@@ -256,13 +268,6 @@ cmp.setup({
 
 -- Now setting up lsp
 require("nvim-lsp-installer").setup {}
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<leader>de', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '<leader>ds', vim.diagnostic.show, opts)
-vim.keymap.set('n', '<leader>dp', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', '<leader>dn', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<leader>dd', "<cmd>Telescope diagnostics<CR>", opts)
-vim.keymap.set('n', '<leader>da', vim.lsp.buf.code_action, opts)
 
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
