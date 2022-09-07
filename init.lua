@@ -80,6 +80,16 @@ require('packer').startup(function(use)
     }
   }
 
+  use {
+    'folke/which-key.nvim',
+    config = function()
+      require("which-key").setup {
+        window = {
+          border = "single"
+        },
+      }
+    end
+  }
 
   -- Treesitter is a almost a required plugin for neovim
   -- that makes reading code a lot better.
@@ -247,12 +257,12 @@ cmp.setup({
 -- Now setting up lsp
 require("nvim-lsp-installer").setup {}
 local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<space>qq', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '<space>e', vim.diagnostic.show, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<leader>de', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '<leader>ds', vim.diagnostic.show, opts)
+vim.keymap.set('n', '<leader>dp', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', '<leader>dn', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<leader>dd', "<cmd>Telescope diagnostics<CR>", opts)
-vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+vim.keymap.set('n', '<leader>da', vim.lsp.buf.code_action, opts)
 
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
