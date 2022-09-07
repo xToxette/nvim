@@ -106,7 +106,6 @@ require('packer').startup(function(use)
     end
   }
 
-
   -- Telescope makes finding files in your project easy. 
   use {
     'nvim-telescope/telescope.nvim',
@@ -139,7 +138,13 @@ require('packer').startup(function(use)
     end
   }
 
-
+  use {
+    'nvim-telescope/telescope-ui-select.nvim',
+    requires = 'nvim-telescope/telescope.nvim',
+    config = function()
+      require('telescope').load_extension('ui-select')
+    end
+  }
 
   -- All the plugins below here are too complicated to setup
   -- inside the packer config, so the setup is found at the
