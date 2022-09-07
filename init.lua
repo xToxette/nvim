@@ -166,11 +166,11 @@ require('material').setup({
     floating_windows = false,
   },
 })
---vim.cmd 'set termguicolors'
---vim.g.material_style = "darker"
---vim.cmd 'colorscheme material'
+vim.cmd 'set termguicolors'
+vim.g.material_style = "darker"
+vim.cmd 'colorscheme material'
 --vim.cmd 'colorscheme adwaita'
-vim.cmd 'colorscheme carbonfox'
+--vim.cmd 'colorscheme carbonfox'
 
 -- =======================================
 -- Setting up default vim settings.
