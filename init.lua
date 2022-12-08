@@ -3,6 +3,7 @@ vim = vim
 local execute = vim.api.nvim_command
 local fn = vim.fn
 
+
 vim.g.mapleader = " "
 
 -- Ensuring that packer is installed
@@ -11,7 +12,6 @@ if fn.empty(fn.glob(install_path)) > 0 then
   execute('!git clone https://github.com/wbthomason/packer.nvim '..install_path)
   execute 'packadd packer.nvim'
 end
-
 vim.cmd('packadd packer.nvim')
 
 local packer = require'packer'
@@ -19,8 +19,8 @@ local util = require'packer.util'
 
 packer.init({
   package_root = util.join_paths(vim.fn.stdpath('data'), 'site', 'pack')
-})
 
+})
 
 -- Enabling all the package needed for my configuration.
 -- This does not include setup for each specific plugin.
@@ -34,22 +34,58 @@ require('packer').startup(function(use)
   use 'Mofiqul/adwaita.nvim'
   use 'EdenEast/nightfox.nvim'
   use 'J0sueTM/gruber-darker-vim'
+  use 'chriskempson/base16-vim'
+  use { "briones-gabriel/darcula-solid.nvim", requires = "rktjmp/lush.nvim" }
+  use { "catppuccin/nvim", as = "catppuccin" }
+  use { "bluz71/vim-moonfly-colors", branch = "cterm-compat" }
+  use {
+    "meliora-theme/neovim",
+    requires = { "rktjmp/lush.nvim" }
+  }
+  use { "jacoborus/tender.vim" }
+
+
+  use "glepnir/dashboard-nvim"
+  use "tpope/vim-commentary"
 
   -- Getting the nvim-tree plugin that makes
   -- Nvim be able to display a directory tree
   -- at the side
+  -- use {
+  --   'kyazdani42/nvim-tree.lua',
+  --   requires = {
+  --     'kyazdani42/nvim-web-devicons'
+  --   },
+  --   tag = 'nightly',
+  --   config = function()
+  --     local opts = { noremap=true, silent=true }
+  --     require('nvim-tree').setup {
+  --       vim.keymap.set('n', '<leader>tt', "<cmd>NvimTreeToggle<CR>", opts),
+  --       vim.keymap.set('n', '<leader>tf', "<cmd>NvimTreeFocus<CR>", opts),
+  --     }
+  --   end
+  -- }
   use {
-    'kyazdani42/nvim-tree.lua',
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v2.x",
     requires = {
-      'kyazdani42/nvim-web-devicons'
+        "nvim-lua/plenary.nvim",
+        "nvim-tree/nvim-web-devicons",
+        "MunifTanjim/nui.nvim",
     },
-    tag = 'nightly',
-    config = function()
-      local opts = { noremap=true, silent=true }
-      require('nvim-tree').setup {
-        vim.keymap.set('n', '<leader>tt', "<cmd>NvimTreeToggle<CR>", opts),
-        vim.keymap.set('n', '<leader>tf', "<cmd>NvimTreeFocus<CR>", opts),
-      }
+    config = function ()
+      vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+
+      require("neo-tree").setup({
+        close_if_last_window = false,
+        popup_border_style = "rounded",
+        enable_git_status = true,
+        enable_diagnostics = true,
+
+        window = {
+            width = 25
+        }
+      })
     end
   }
 
@@ -146,6 +182,8 @@ require('packer').startup(function(use)
     end
   }
 
+
+
   -- All the plugins below here are too complicated to setup
   -- inside the packer config, so the setup is found at the
   -- bottom of this init.lua file
@@ -160,6 +198,18 @@ require('packer').startup(function(use)
   use 'saadparwaiz1/cmp_luasnip'
   use 'ray-x/lsp_signature.nvim'
   use 'nvim-treesitter/nvim-treesitter-refactor'
+  use {
+      "lewis6991/hover.nvim",
+      config = function()
+          require("hover").setup {
+              init = function()
+                require("hover.providers.lsp")
+              end,
+              preview_window = false,
+              title = true,
+          }
+      end
+  }
 
   use 'simrat39/rust-tools.nvim'
 
@@ -167,7 +217,6 @@ require('packer').startup(function(use)
   use 'rafamadriz/friendly-snippets'
 
 end)
-
 
 -- =======================================
 -- Setting up the theme
@@ -177,13 +226,19 @@ end)
 -- it into material's packer config
 require('material').setup({
   contrast = {
-    sidebars = true,
+    sidebars = false,
     floating_windows = false,
   },
+  styles = {
+    keywords = { bold = true },
+  }
 })
+
 vim.cmd 'set termguicolors'
-vim.g.material_style = "darker"
-vim.cmd 'colorscheme material'
+vim.cmd 'colorscheme darcula-solid'
+vim.cmd 'set termguicolors'
+--vim.g.material_style = "darker"
+--vim.cmd 'colorscheme material'
 --vim.cmd 'colorscheme adwaita'
 --vim.cmd 'colorscheme carbonfox'
 
@@ -198,23 +253,37 @@ vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
+vim.opt.timeoutlen=300
 vim.opt.number = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.incsearch = true
-vim.cmd('set norelativenumber')
+vim.cmd('set relativenumber')
+vim.cmd('set guicursor=i:block')
 vim.opt.cmdheight = 1
 vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 520
 vim.opt.undofile = true
 vim.cmd('filetype plugin on')
 vim.opt.backup = false
+vim.cmd('set showbreak=\\')
+vim.cmd('set linebreak')
+vim.cmd('set breakindent')
 
 -- =======================================
 -- Setting up keybindings with WhichKey
 -- =======================================
 local wk = require('which-key')
 wk.register({
+  ["<C-s>"] = { "<cmd>w<CR>", "Save File" },
+  ["<C-Q>"] = { "<cmd>wq!<CR>", "Save File" },
+
+  ["<C-h>"] = { "<C-w>h", "Go to window left"},
+  ["<C-j>"] = { "<C-w>j", "Go to window down"},
+  ["<C-k>"] = { "<C-w>k", "Go to window up"},
+  ["<C-l>"] = { "<C-w>l", "Go to window right"},
+
+  -- Keybindings for diagnostics and LSP
   ["<leader>d"] = { name = "+diagnostics" },
   ["<leader>de"] = { vim.diagnostic.open_float, "Diagnostics open_float"},
   ["<leader>ds"] = { vim.diagnostic.show, "Diagnostics show"},
@@ -222,6 +291,34 @@ wk.register({
   ["<leader>dn"] = { vim.diagnostic.goto_next, "Diagnostics goto_next"},
   ["<leader>dd"] = { "<cmd>Telescope diagnostics<CR>", "Diagnostics telescope"},
   ["<leader>da"] = { vim.lsp.buf.code_action, "Diagnostics code_action"},
+
+  ["<leader>dh"] = { name = "+hover" },
+  ["<leader>dhh"] = { require("hover").hover, "Lsp Hover" },
+  ["<leader>dhs"] = { require("hover").hover_select, "Lsp Hover Select" },
+
+
+  ["<leader>u"] = { name = "+utils" },
+  ["<leader>uc"] = { "<cmd>Commentary<CR>", "(un)comment" },
+
+
+  ["<leader>t"] = { name = "+nvim tree" },
+  ["<leader>tt"] = { "<cmd>Neotree toggle<CR>", "Toggle Neotree" },
+
+
+  ["<leader>g"] = { name = "+git" },
+
+
+  ["<leader>f"] = { name = "+find" },
+
+
+  ["<leader>p"] = { name = "+project" },
+
+
+  ["<leader>v"] = { name = "+view" },
+  ["<leader>vo"] = { "<cmd>only<CR>", "Only"},
+  ["<leader>vs"] = { name = "+split window" },
+  ["<leader>vsh"] = { "<cmd>split<CR>", "split horizontal"},
+  ["<leader>vsv"] = { "<cmd>vsplit<CR>", "split vertical"},
 })
 
 -- =======================================
@@ -240,14 +337,13 @@ cmp.setup({
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
   },
+
   mapping = cmp.mapping.preset.insert({
     ["<C-p>"] = cmp.mapping.select_prev_item(),
     ["<C-n"] = cmp.mapping.select_next_item(),
     ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.close(),
+    ['<C-e>'] = cmp.mapping.abort(),
     ['<CR>'] = cmp.mapping.confirm({
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = false,
     }),
   }),
   sources = {
@@ -264,7 +360,8 @@ cmp.setup({
             buffer = 'Ω',
         }
     	item.menu = menu_icon[entry.source.name]
-	return item
+        item.abbr = string.sub(item.abbr, 1, 25);
+	    return item
     end,
   },
 })
@@ -281,17 +378,17 @@ for type, icon in pairs(signs) do
 end
 
 vim.diagnostic.config({
-  --virtual_text = {
-  --  -- source = "always",  -- Or "if_many"
-  --  prefix = '●', -- Could be '■', '▎', 'x'
-  --},
-  virtual_text = false;
+  virtual_text = {
+    source = "always",  -- Or "if_many"
+    prefix = '●', -- Could be '■', '▎', 'x'
+  },
+  --virtual_text = true;
   severity_sort = true,
   float = {
     source = "always",  -- Or "if_many"
   },
   signs = true,
-  update_in_insert = true,
+  update_in_insert = false,
   underline = true,
 })
 
@@ -318,6 +415,7 @@ end
 
 
 local lspconfig = require("lspconfig")
+
 lspconfig.sumneko_lua.setup{
   on_attach = on_attach,
   capabilities = capabilities
