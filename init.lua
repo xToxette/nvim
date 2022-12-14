@@ -187,7 +187,8 @@ require('packer').startup(function(use)
   -- All the plugins below here are too complicated to setup
   -- inside the packer config, so the setup is found at the
   -- bottom of this init.lua file
-  use 'williamboman/nvim-lsp-installer'
+  use 'williamboman/mason.nvim'
+  use 'williamboman/mason-lspconfig.nvim'
   use 'neovim/nvim-lspconfig'
   use 'folke/lsp-colors.nvim'
   use 'hrsh7th/cmp-nvim-lsp'
@@ -196,7 +197,6 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
   use 'saadparwaiz1/cmp_luasnip'
-  use 'ray-x/lsp_signature.nvim'
   use 'nvim-treesitter/nvim-treesitter-refactor'
   use {
       "lewis6991/hover.nvim",
@@ -259,7 +259,6 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.incsearch = true
 vim.cmd('set relativenumber')
-vim.cmd('set guicursor=i:block')
 vim.opt.cmdheight = 1
 vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 520
@@ -276,25 +275,12 @@ vim.cmd('set breakindent')
 local wk = require('which-key')
 wk.register({
   ["<C-s>"] = { "<cmd>w<CR>", "Save File" },
-  ["<C-Q>"] = { "<cmd>wq!<CR>", "Save File" },
+  ["<C-Q>"] = { "<cmd>wq!<CR>", "Save and Quit File" },
 
   ["<C-h>"] = { "<C-w>h", "Go to window left"},
   ["<C-j>"] = { "<C-w>j", "Go to window down"},
   ["<C-k>"] = { "<C-w>k", "Go to window up"},
   ["<C-l>"] = { "<C-w>l", "Go to window right"},
-
-  -- Keybindings for diagnostics and LSP
-  ["<leader>d"] = { name = "+diagnostics" },
-  ["<leader>de"] = { vim.diagnostic.open_float, "Diagnostics open_float"},
-  ["<leader>ds"] = { vim.diagnostic.show, "Diagnostics show"},
-  ["<leader>dp"] = { vim.diagnostic.goto_prev, "Diagnostics goto_prev"},
-  ["<leader>dn"] = { vim.diagnostic.goto_next, "Diagnostics goto_next"},
-  ["<leader>dd"] = { "<cmd>Telescope diagnostics<CR>", "Diagnostics telescope"},
-  ["<leader>da"] = { vim.lsp.buf.code_action, "Diagnostics code_action"},
-
-  ["<leader>dh"] = { name = "+hover" },
-  ["<leader>dhh"] = { require("hover").hover, "Lsp Hover" },
-  ["<leader>dhs"] = { require("hover").hover_select, "Lsp Hover Select" },
 
 
   ["<leader>u"] = { name = "+utils" },
@@ -324,130 +310,5 @@ wk.register({
 -- =======================================
 -- Setting up LSP and Autocomplete
 -- =======================================
--- First settingup nvim-cmp
-local cmp = require('cmp')
+require("lsp")
 
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      require('luasnip').lsp_expand(args.body)
-    end,
-  },
-  window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
-  },
-
-  mapping = cmp.mapping.preset.insert({
-    ["<C-p>"] = cmp.mapping.select_prev_item(),
-    ["<C-n"] = cmp.mapping.select_next_item(),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({
-    }),
-  }),
-  sources = {
-    { name = 'nvim_lsp', priority = 3, keyword_length = 1 },
-    { name = 'luasnip', priority = 2 },
-    { name = 'buffer', priority = 1 },
-  },
-  formatting = {
-    fiels = {'menu', 'abbr', 'kind'},
-    format = function(entry, item)
-        local menu_icon = {
-            nvim_lsp = 'λ',
-            luasnip = '⋗',
-            buffer = 'Ω',
-        }
-    	item.menu = menu_icon[entry.source.name]
-        item.abbr = string.sub(item.abbr, 1, 25);
-	    return item
-    end,
-  },
-})
-
-
-
--- Now setting up lsp
-require("nvim-lsp-installer").setup {}
-
-local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
-
-vim.diagnostic.config({
-  virtual_text = {
-    source = "always",  -- Or "if_many"
-    prefix = '●', -- Could be '■', '▎', 'x'
-  },
-  --virtual_text = true;
-  severity_sort = true,
-  float = {
-    source = "always",  -- Or "if_many"
-  },
-  signs = true,
-  update_in_insert = false,
-  underline = true,
-})
-
-
-local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
-local on_attach = function(client, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  require("lsp_signature").on_attach({
-    bind = true,
-    floating_window = true,
-    hint_enable = true,
-    zindex = 10,
-    toggle_key = '<M-x>',
-    handler_opts = {
-      border = "rounded"
-    }
-  }, bufnr)
-
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-end
-
-
-local lspconfig = require("lspconfig")
-
-lspconfig.sumneko_lua.setup{
-  on_attach = on_attach,
-  capabilities = capabilities
-}
-
-lspconfig.bashls.setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-
-lspconfig.clangd.setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-
-lspconfig.rust_analyzer.setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-require('rust-tools').setup({})
-
-lspconfig.omnisharp.setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-
-lspconfig.jdtls.setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-
-lspconfig.pyright.setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
