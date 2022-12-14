@@ -17,11 +17,18 @@ local default_on_attach = function(_, bufnr)
         ["<leader>dp"] = { vim.diagnostic.goto_prev, "Diagnostics goto_prev"},
         ["<leader>dn"] = { vim.diagnostic.goto_next, "Diagnostics goto_next"},
         ["<leader>dd"] = { "<cmd>Telescope diagnostics<CR>", "Diagnostics telescope"},
-        ["<leader>da"] = { vim.lsp.buf.code_action, "Diagnostics code_action"},
 
-        ["<leader>dh"] = { name = "+hover" },
-        ["<leader>dhh"] = { require("hover").hover, "Lsp Hover" },
-        ["<leader>dhs"] = { require("hover").hover_select, "Lsp Hover Select" },
+        ["<leader>l"] = { name = "+lsp" },
+        ["<leader>la"] = { vim.lsp.buf.code_action, "LSP Code Action"},
+        ["<leader>li"] = { require("telescope.builtin").lsp_implementations, "LSP Implementation"},
+        ["<leader>lf"] = { vim.lsp.buf.formatting, "LSP Formatting"},
+        ["<leader>lrf"] = { require("telescope.builtin").lsp_references, "LSP References"},
+        ["<leader>ld"] = { require("telescope.builtin").lsp_definitions, "LSP Definition"},
+        ["<leader>lrn"] = { vim.lsp.buf.rename, "LSP Rename"},
+
+        ["<leader>lh"] = { name = "+hover" },
+        ["<leader>lhh"] = { require("hover").hover, "Lsp Hover" },
+        ["<leader>lhs"] = { require("hover").hover_select, "Lsp Hover Select" },
     }, { noremap=true, silent=true, buffer=bufnr })
 
 end

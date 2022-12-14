@@ -3,8 +3,8 @@ vim = vim
 local execute = vim.api.nvim_command
 local fn = vim.fn
 
-
 vim.g.mapleader = " "
+
 
 -- Ensuring that packer is installed
 local install_path = fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
@@ -186,7 +186,6 @@ require('packer').startup(function(use)
 
   -- All the plugins below here are too complicated to setup
   -- inside the packer config, so the setup is found at the
-  -- bottom of this init.lua file
   use 'williamboman/mason.nvim'
   use 'williamboman/mason-lspconfig.nvim'
   use 'neovim/nvim-lspconfig'
@@ -218,97 +217,7 @@ require('packer').startup(function(use)
 
 end)
 
--- =======================================
--- Setting up the theme
--- =======================================
--- Under here is a temporary material setup.
--- I am still trying to figure out how to put
--- it into material's packer config
-require('material').setup({
-  contrast = {
-    sidebars = false,
-    floating_windows = false,
-  },
-  styles = {
-    keywords = { bold = true },
-  }
-})
 
-vim.cmd 'set termguicolors'
-vim.cmd 'colorscheme darcula-solid'
-vim.cmd 'set termguicolors'
---vim.g.material_style = "darker"
---vim.cmd 'colorscheme material'
---vim.cmd 'colorscheme adwaita'
---vim.cmd 'colorscheme carbonfox'
-
--- =======================================
--- Setting up default vim settings.
--- =======================================
-vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
-vim.opt.laststatus = 3
-vim.opt.mouse = 'a'
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-vim.opt.expandtab = true
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.timeoutlen=300
-vim.opt.number = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.incsearch = true
-vim.cmd('set relativenumber')
-vim.opt.cmdheight = 1
-vim.opt.signcolumn = 'yes'
-vim.opt.updatetime = 520
-vim.opt.undofile = true
-vim.cmd('filetype plugin on')
-vim.opt.backup = false
-vim.cmd('set showbreak=\\')
-vim.cmd('set linebreak')
-vim.cmd('set breakindent')
-
--- =======================================
--- Setting up keybindings with WhichKey
--- =======================================
-local wk = require('which-key')
-wk.register({
-  ["<C-s>"] = { "<cmd>w<CR>", "Save File" },
-  ["<C-Q>"] = { "<cmd>wq!<CR>", "Save and Quit File" },
-
-  ["<C-h>"] = { "<C-w>h", "Go to window left"},
-  ["<C-j>"] = { "<C-w>j", "Go to window down"},
-  ["<C-k>"] = { "<C-w>k", "Go to window up"},
-  ["<C-l>"] = { "<C-w>l", "Go to window right"},
-
-
-  ["<leader>u"] = { name = "+utils" },
-  ["<leader>uc"] = { "<cmd>Commentary<CR>", "(un)comment" },
-
-
-  ["<leader>t"] = { name = "+nvim tree" },
-  ["<leader>tt"] = { "<cmd>Neotree toggle<CR>", "Toggle Neotree" },
-
-
-  ["<leader>g"] = { name = "+git" },
-
-
-  ["<leader>f"] = { name = "+find" },
-
-
-  ["<leader>p"] = { name = "+project" },
-
-
-  ["<leader>v"] = { name = "+view" },
-  ["<leader>vo"] = { "<cmd>only<CR>", "Only"},
-  ["<leader>vs"] = { name = "+split window" },
-  ["<leader>vsh"] = { "<cmd>split<CR>", "split horizontal"},
-  ["<leader>vsv"] = { "<cmd>vsplit<CR>", "split vertical"},
-})
-
--- =======================================
--- Setting up LSP and Autocomplete
--- =======================================
+require("main")
 require("lsp")
 
