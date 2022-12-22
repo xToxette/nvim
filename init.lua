@@ -29,7 +29,9 @@ require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim', opt = true }
 
   use 'ellisonleao/gruvbox.nvim'
+  use 'aktersnurra/no-clown-fiesta.nvim'
   use 'marko-cerovac/material.nvim'
+  use 'Mofiqul/dracula.nvim'
   use 'shaeinst/roshnivim-cs'
   use 'Mofiqul/adwaita.nvim'
   use 'EdenEast/nightfox.nvim'
@@ -65,6 +67,12 @@ require('packer').startup(function(use)
   --     }
   --   end
   -- }
+
+  use {
+      'nvim-lualine/lualine.nvim',
+      requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+  }
+
   use {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v2.x",
@@ -182,7 +190,50 @@ require('packer').startup(function(use)
     end
   }
 
+  use {
+      'folke/todo-comments.nvim',
+      requires = 'nvim-lua/plenary.nvim',
+      config = function ()
+          require("todo-comments").setup {
 
+          }
+      end
+  }
+
+  use {
+      'windwp/nvim-ts-autotag',
+      config = function ()
+          require('nvim-ts-autotag').setup()
+      end
+  }
+
+  use {
+      'norcalli/nvim-colorizer.lua',
+      config = function ()
+          require('colorizer').setup()
+      end
+  }
+
+  use {
+      'akinsho/toggleterm.nvim',
+      tag = '*',
+      config = function ()
+        require("toggleterm").setup()
+
+        require('which-key').register({
+            ["<leader>ut"] = { name = "+Terminal"},
+            ["<leader>utt"] = { "<cmd>ToggleTerm<CR>", " to window left"},
+        }, {mode = "n"})
+
+        require('which-key').register({
+            ["<esc>"] = { "<C-\\><C-n>", "Escape Terminal"},
+            ["<C-h>"] = { [[<cmd>wincmd h<CR>]], "Escape Terminal left"},
+            ["<C-j>"] = { [[<cmd>wincmd j<CR>]], "Escape Terminal down"},
+            ["<C-k>"] = { [[<cmd>wincmd k<CR>]], "Escape Terminal up"},
+            ["<C-l>"] = { [[<cmd>wincmd l<CR>]], "Escape Terminal right"},
+        }, {mode = "t"})
+      end
+  }
 
   -- All the plugins below here are too complicated to setup
   -- inside the packer config, so the setup is found at the

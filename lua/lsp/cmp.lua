@@ -2,6 +2,35 @@ local vim = vim
 
 local cmp = require('cmp')
 
+local kind_icons = {
+  Text = "",
+  Method = "",
+  Function = "",
+  Constructor = "",
+  Field = "",
+  Variable = "",
+  Class = "ﴯ",
+  Interface = "",
+  Module = "",
+  Property = "ﰠ",
+  Unit = "",
+  Value = "",
+  Enum = "",
+  Keyword = "",
+  Snippet = "",
+  Color = "",
+  File = "",
+  Reference = "",
+  Folder = "",
+  EnumMember = "",
+  Constant = "",
+  Struct = "",
+  Event = "",
+  Operator = "",
+  TypeParameter = ""
+}
+
+
 cmp.setup({
   snippet = {
     expand = function(args)
@@ -9,7 +38,9 @@ cmp.setup({
     end,
   },
   window = {
-    completion = cmp.config.window.bordered(),
+    completion = cmp.config.window.bordered({
+
+    }),
     documentation = cmp.config.window.bordered(),
   },
 
@@ -42,14 +73,40 @@ cmp.setup({
   formatting = {
     fiels = {'menu', 'abbr', 'kind'},
     format = function(entry, item)
-        local menu_icon = {
-            nvim_lsp = 'λ',
-            luasnip = '⋗',
-            buffer = 'Ω',
-        }
-    	item.menu = menu_icon[entry.source.name]
-        item.abbr = string.sub(item.abbr, 1, 25);
+        item.kind = string.format("%s %s", kind_icons[item.kind], item.kind)
+        item.menu = ({
+            buffer = "[Buffer]",
+            nvim_lsp = "[LSP]",
+            luasnip = "[LuaSnip]",
+            nvim_lua = "[Lua]",
+            latex_symbol = "[LaTeX]"
+        })[entry.source.name]
+        item.abbr = string.sub(item.abbr, 1, 40);
 	    return item
     end,
   },
+})
+
+cmp.setup.cmdline({'/', '?'}, {
+    view = {
+        entries = { name = "wildmenu", separator = ' | ' }
+    },
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+        { name = "buffer" }
+    }
+})
+
+cmp.setup.cmdline(':', {
+    view = {
+        entries = { name = "wildmenu", separator = ' | ' }
+    },
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = "cmdline" }
+    })
 })

@@ -10,5 +10,7 @@ require('material').setup({
   }
 })
 
-vim.cmd 'set termguicolors'
-vim.cmd 'colorscheme darcula-solid'
+vim.cmd ('set termguicolors')
+
+vim.g.material_style = "darker"
+vim.cmd 'colorscheme no-clown-fiesta'
