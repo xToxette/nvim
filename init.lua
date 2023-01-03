@@ -73,12 +73,14 @@ require('packer').startup(function(use)
       requires = { 'kyazdani42/nvim-web-devicons', opt = true }
   }
 
+  use 'nvim-tree/nvim-web-devicons'
+
   use {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v2.x",
     requires = {
         "nvim-lua/plenary.nvim",
-        "nvim-tree/nvim-web-devicons",
+        'nvim-tree/nvim-web-devicons',
         "MunifTanjim/nui.nvim",
     },
     config = function ()
@@ -135,20 +137,30 @@ require('packer').startup(function(use)
     end
   }
 
+  use { 'windwp/nvim-ts-autotag' }
+
   -- Treesitter is a almost a required plugin for neovim
-  -- that makes reading code a lot better.
+  -- that makes reading, code a lot better.
   use {
     'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate',
     config = function()
       require('nvim-treesitter.configs').setup {
         ensure_installed = { "c", "lua", "rust", "c_sharp", "python", "bash", "java" },
         sync_install = false,
         highlight = {
           enable = true,
+        },
+        indent = {
+          enable = true,
+        },
+        autotag = {
+          enable = true,
         }
       }
     end
   }
+  use 'nvim-treesitter/nvim-treesitter-refactor'
 
   -- Telescope makes finding files in your project easy. 
   use {
@@ -200,12 +212,6 @@ require('packer').startup(function(use)
       end
   }
 
-  use {
-      'windwp/nvim-ts-autotag',
-      config = function ()
-          require('nvim-ts-autotag').setup()
-      end
-  }
 
   use {
       'norcalli/nvim-colorizer.lua',
@@ -240,6 +246,10 @@ require('packer').startup(function(use)
   use 'williamboman/mason.nvim'
   use 'williamboman/mason-lspconfig.nvim'
   use 'neovim/nvim-lspconfig'
+
+  use 'jose-elias-alvarez/null-ls.nvim'
+  use 'MunifTanjim/prettier.nvim'
+
   use 'folke/lsp-colors.nvim'
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/nvim-cmp'
@@ -247,7 +257,6 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
   use 'saadparwaiz1/cmp_luasnip'
-  use 'nvim-treesitter/nvim-treesitter-refactor'
   use {
       "lewis6991/hover.nvim",
       config = function()

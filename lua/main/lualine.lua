@@ -2,7 +2,7 @@ local vim = vim
 
 require("lualine").setup({
     options = {
-        theme = 'auto',
+        theme = 'material-stealth',
         component_separators = { left = '', right = ''},
         section_separators = { left = '', right = ''},
     },
