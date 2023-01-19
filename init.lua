@@ -93,7 +93,7 @@ require('packer').startup(function(use)
         enable_diagnostics = true,
 
         window = {
-            width = 25
+            width = 40
         }
       })
     end

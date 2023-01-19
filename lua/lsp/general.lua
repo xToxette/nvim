@@ -17,7 +17,7 @@ vim.diagnostic.config({
     source = "always",  -- Or "if_many"
   },
   signs = true,
-  update_in_insert = false,
+  update_in_insert = true,
   underline = true,
 })
 
