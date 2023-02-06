@@ -19,8 +19,8 @@ local util = require'packer.util'
 
 packer.init({
   package_root = util.join_paths(vim.fn.stdpath('data'), 'site', 'pack')
-
 })
+
 
 -- Enabling all the package needed for my configuration.
 -- This does not include setup for each specific plugin.
@@ -93,8 +93,11 @@ require('packer').startup(function(use)
         enable_diagnostics = true,
 
         window = {
-            width = 40
-        }
+          width = 40,
+          mappings = {
+            ["e"] = "open",
+          }
+        },
       })
     end
   }
@@ -146,7 +149,7 @@ require('packer').startup(function(use)
     run = ':TSUpdate',
     config = function()
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { "c", "lua", "rust", "c_sharp", "python", "bash", "java" },
+        ensure_installed = { "c", "lua", "rust", "c_sharp", "python", "bash", "java", "astro" },
         sync_install = false,
         highlight = {
           enable = true,
@@ -156,6 +159,12 @@ require('packer').startup(function(use)
         },
         autotag = {
           enable = true,
+          filetypes = { 'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx', 'rescript', 'astro',
+            'xml',
+            'php',
+            'markdown',
+            'glimmer','handlebars','hbs'
+          }
         }
       }
     end
@@ -251,6 +260,21 @@ require('packer').startup(function(use)
   use 'MunifTanjim/prettier.nvim'
 
   use 'folke/lsp-colors.nvim'
+
+  use {
+    'ms-jpq/coq_nvim',
+    branch = "coq"
+  }
+  use {
+    'ms-jpq/coq.artifacts',
+    branch = "artifacts"
+  }
+
+  use {
+    'ms-jpq/coq.thirdparty',
+    branch = "3p"
+  }
+
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/nvim-cmp'
   use 'hrsh7th/cmp-buffer'

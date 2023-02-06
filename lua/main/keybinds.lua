@@ -15,7 +15,7 @@ wk.register({
   ["<leader>u"] = { name = "+utils" },
   ["<leader>uc"] = { "<cmd>Commentary<CR>", "(un)comment" },
 
-
+  ["<C-e>"] = { "<cmd>Neotree toggle<CR>", "Toggle Neotree" },
   ["<leader>t"] = { name = "+nvim tree" },
   ["<leader>tt"] = { "<cmd>Neotree toggle<CR>", "Toggle Neotree" },
 
