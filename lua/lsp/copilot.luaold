@@ -1,0 +1,17 @@
+local vim = vim
+
+-- local copilot_status_ok, copilot = pcall(require, "copilot")
+-- if not copilot_status_ok then
+--   return
+-- end
+
+-- vim.g.copilot_assume_mapped = true
+
+-- vim.g.copilot_no_tab_map = true
+-- vim.api.nvim_set_keymap(
+--   "i",
+--   "<C-f>",
+--   'copilot#Accept("<CR>")',
+--   { silent = true, expr = true })
+
+

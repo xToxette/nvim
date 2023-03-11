@@ -26,6 +26,7 @@ local default_on_attach = function(_, bufnr)
         ["<leader>ld"] = { require("telescope.builtin").lsp_definitions, "LSP Definition"},
         ["<leader>lrn"] = { vim.lsp.buf.rename, "LSP Rename"},
 
+        ["<C-g>"] = { require("hover").hover, "Lsp Hover" },
         ["<leader>lh"] = { name = "+hover" },
         ["<leader>lhh"] = { require("hover").hover, "Lsp Hover" },
         ["<leader>lhs"] = { require("hover").hover_select, "Lsp Hover Select" },

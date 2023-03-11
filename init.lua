@@ -47,7 +47,16 @@ require('packer').startup(function(use)
   use { "jacoborus/tender.vim" }
 
 
-  use "glepnir/dashboard-nvim"
+  use {
+    "glepnir/dashboard-nvim",
+    event = 'VimEnter',
+    config = function ()
+      require('dashboard').setup {
+
+      }
+    end,
+    requires = {'nvim-tree/nvim-web-devicons'}
+  }
   use "tpope/vim-commentary"
 
   -- Getting the nvim-tree plugin that makes
