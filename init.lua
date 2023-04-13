@@ -29,7 +29,6 @@ require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim', opt = true }
   use 'ellisonleao/gruvbox.nvim'
   use 'sainnhe/gruvbox-material'
-  use 'tribela/vim-transparent'
   use 'aktersnurra/no-clown-fiesta.nvim'
   use 'marko-cerovac/material.nvim'
   use 'Mofiqul/dracula.nvim'
@@ -47,6 +46,12 @@ require('packer').startup(function(use)
   }
   use { "jacoborus/tender.vim" }
 
+  -- For transparent background
+  use {
+    'tribela/vim-transparent',
+    config = function ()
+    end,
+  }
 
   use {
     "glepnir/dashboard-nvim",

@@ -16,5 +16,6 @@ vim.g.material_style = "darker"
 vim.o.background = "dark"
 vim.g.gruvbox_material_background = "hard"
 
-vim.cmd 'colorscheme material'
+vim.cmd 'colorscheme no-clown-fiesta'
+
 
