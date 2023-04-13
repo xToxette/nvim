@@ -7,10 +7,7 @@ for type, icon in pairs(signs) do
 end
 
 vim.diagnostic.config({
-  virtual_text = {
-    source = "always",  -- Or "if_many"
-    prefix = '●', -- Could be '■', '▎', 'x'
-  },
+  virtual_text = false,
   --virtual_text = true;
   severity_sort = true,
   float = {
