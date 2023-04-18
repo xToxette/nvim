@@ -50,6 +50,7 @@ require('packer').startup(function(use)
   use {
     'tribela/vim-transparent',
     config = function ()
+      -- vim.cmd("let g:transparent_groups += ['NormalFloat']")
     end,
   }
 

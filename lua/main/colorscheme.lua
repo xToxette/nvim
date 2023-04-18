@@ -7,6 +7,9 @@ require('material').setup({
   },
   styles = {
     keywords = { bold = true },
+  },
+  disable = {
+    background = true,
   }
 })
 
@@ -16,6 +19,4 @@ vim.g.material_style = "darker"
 vim.o.background = "dark"
 vim.g.gruvbox_material_background = "hard"
 
-vim.cmd 'colorscheme no-clown-fiesta'
-
-
+vim.cmd 'colorscheme material'

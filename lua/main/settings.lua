@@ -31,7 +31,7 @@ vim.opt.number = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = 4
 
 vim.opt.cmdheight = 1
 
