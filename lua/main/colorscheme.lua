@@ -16,7 +16,8 @@ require('material').setup({
 vim.cmd ('set termguicolors')
 
 vim.g.material_style = "darker"
+vim.opt.background = "dark"
 vim.o.background = "dark"
 vim.g.gruvbox_material_background = "hard"
 
-vim.cmd 'colorscheme material'
+vim.cmd 'colorscheme oxocarbon'

@@ -36,6 +36,7 @@ require('packer').startup(function(use)
   use 'Mofiqul/adwaita.nvim'
   use 'EdenEast/nightfox.nvim'
   use 'J0sueTM/gruber-darker-vim'
+  use 'nyoom-engineering/oxocarbon.nvim'
   use 'chriskempson/base16-vim'
   use { "briones-gabriel/darcula-solid.nvim", requires = "rktjmp/lush.nvim" }
   use { "catppuccin/nvim", as = "catppuccin" }
@@ -309,6 +310,28 @@ require('packer').startup(function(use)
           }
       end
   }
+
+  use {
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    config = function()
+      require('copilot').setup({
+        suggestion = { enable = false },
+        panel = { enable = false }
+      })
+    end,
+  }
+
+
+  use {
+    'zbirenbaum/copilot-cmp',
+    after = { 'copilot.lua' },
+    config = function ()
+      require('copilot_cmp').setup()
+    end
+  }
+
 
   use 'simrat39/rust-tools.nvim'
 

@@ -38,10 +38,13 @@ cmp.setup({
     end,
   },
   window = {
-    completion = cmp.config.window.bordered({
+    completion = {
+      side_padding = 0,
+    }
+    -- completion = cmp.config.window.bordered({
 
-    }),
-    documentation = cmp.config.window.bordered(),
+    -- }),
+    -- documentation = cmp.config.window.bordered(),
   },
 
   mapping = cmp.mapping.preset.insert({
@@ -66,21 +69,24 @@ cmp.setup({
     end, {"i", "s", "c",})
   }),
   sources = {
-    { name = 'nvim_lsp', priority = 3, keyword_length = 1 },
-    { name = 'luasnip', priority = 2 },
-    { name = 'buffer', priority = 1 },
+    { name = 'copilot', priority = 1 },
+    { name = 'nvim_lsp', priority = 2, keyword_length = 1 },
+    { name = 'luasnip', priority = 3 },
+    { name = 'buffer', priority = 4 },
   },
   formatting = {
-    fiels = {'menu', 'abbr', 'kind'},
+    fields = {'kind', 'abbr', 'menu'},
     format = function(entry, item)
-        item.kind = string.format("%s %s", kind_icons[item.kind], item.kind)
-        item.menu = ({
-            buffer = "[Buffer]",
-            nvim_lsp = "[LSP]",
-            luasnip = "[LuaSnip]",
-            nvim_lua = "[Lua]",
-            latex_symbol = "[LaTeX]"
-        })[entry.source.name]
+        local kind = item.kind
+        -- item.kind = string.format("%s %s", kind_icons[item.kind], item.kind)
+        -- item.menu = ({
+        --     buffer = "[Buffer]",
+        --     nvim_lsp = "[LSP]",
+        --     luasnip = "[LuaSnip]",
+        --     nvim_lua = "[Lua]",
+        --     latex_symbol = "[LaTeX]"
+        item.kind = " " .. (kind_icons[kind] or "?") .. " "
+        item.menu = "" .. kind .. ""
         item.abbr = string.sub(item.abbr, 1, 40);
 	    return item
     end,
