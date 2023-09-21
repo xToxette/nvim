@@ -8,6 +8,6 @@ require("lsp.prettier")
 
 --require("lsp.copilot")
 
---require("lsp.coq")
+-- require("lsp.coq")
 require("lsp.cmp")
 

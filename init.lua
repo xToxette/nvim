@@ -5,57 +5,54 @@ local fn = vim.fn
 
 vim.g.mapleader = " "
 
+vim.opt.termguicolors = true
+
 
 -- Ensuring that packer is installed
-local install_path = fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-  execute('!git clone https://github.com/wbthomason/packer.nvim '..install_path)
-  execute 'packadd packer.nvim'
-end
-vim.cmd('packadd packer.nvim')
-
-local packer = require'packer'
-local util = require'packer.util'
-
-packer.init({
-  package_root = util.join_paths(vim.fn.stdpath('data'), 'site', 'pack')
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+  "git",
+  "clone",
+  "--filter=blob:none",
+  "https://github.com/folke/lazy.nvim.git",
+  "--branch=stable",
+  lazypath,
 })
+end
 
+vim.opt.rtp:prepend(lazypath)
 
--- Enabling all the package needed for my configuration.
--- This does not include setup for each specific plugin.
--- Plugin setups are found below this funtion
-require('packer').startup(function(use)
-  use { 'wbthomason/packer.nvim', opt = true }
-  use 'ellisonleao/gruvbox.nvim'
-  use 'sainnhe/gruvbox-material'
-  use 'aktersnurra/no-clown-fiesta.nvim'
-  use 'marko-cerovac/material.nvim'
-  use 'Mofiqul/dracula.nvim'
-  use 'shaeinst/roshnivim-cs'
-  use 'Mofiqul/adwaita.nvim'
-  use 'EdenEast/nightfox.nvim'
-  use 'J0sueTM/gruber-darker-vim'
-  use 'nyoom-engineering/oxocarbon.nvim'
-  use 'chriskempson/base16-vim'
-  use { "briones-gabriel/darcula-solid.nvim", requires = "rktjmp/lush.nvim" }
-  use { "catppuccin/nvim", as = "catppuccin" }
-  use { "bluz71/vim-moonfly-colors", branch = "cterm-compat" }
-  use {
-    "meliora-theme/neovim",
-    requires = { "rktjmp/lush.nvim" }
-  }
-  use { "jacoborus/tender.vim" }
+require("lazy").setup({
+  { 'wbthomason/packer.nvim', lazy = true },
+  'ellisonleao/gruvbox.nvim',
+  'sainnhe/gruvbox-material',
+  'aktersnurra/no-clown-fiesta.nvim',
+  'marko-cerovac/material.nvim',
+  'Mofiqul/dracula.nvim',
+  'shaeinst/roshnivim-cs',
+  'Mofiqul/adwaita.nvim',
+  'EdenEast/nightfox.nvim',
+  'J0sueTM/gruber-darker-vim',
+  'nyoom-engineering/oxocarbon.nvim',
+  'chriskempson/base16-vim',
+  { "briones-gabriel/darcula-solid.nvim", dependencies = "rktjmp/lush.nvim" },
+  { "catppuccin/nvim", name = "catppuccin" },
+  { "bluz71/vim-moonfly-colors", branch = "cterm-compat" },
+
+  { "meliora-theme/neovim", dependencies = { "rktjmp/lush.nvim" } },
+
+  { "jacoborus/tender.vim" },
 
   -- For transparent background
-  use {
+  {
     'tribela/vim-transparent',
     config = function ()
       -- vim.cmd("let g:transparent_groups += ['NormalFloat']")
     end,
-  }
+  },
 
-  use {
+  {
     "glepnir/dashboard-nvim",
     event = 'VimEnter',
     config = function ()
@@ -63,9 +60,10 @@ require('packer').startup(function(use)
 
       }
     end,
-    requires = {'nvim-tree/nvim-web-devicons'}
-  }
-  use "tpope/vim-commentary"
+    dependencies = { {'nvim-tree/nvim-web-devicons'}}
+  },
+
+  "tpope/vim-commentary",
 
   -- Getting the nvim-tree plugin that makes
   -- Nvim be able to display a directory tree
@@ -85,17 +83,17 @@ require('packer').startup(function(use)
   --   end
   -- }
 
-  use {
+  {
       'nvim-lualine/lualine.nvim',
-      requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-  }
+      dependencies = { 'nvim-tree/nvim-web-devicons', lazy = true }
+  },
 
-  use 'nvim-tree/nvim-web-devicons'
+  'nvim-tree/nvim-web-devicons',
 
-  use {
+  {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v2.x",
-    requires = {
+    dependencies = {
         "nvim-lua/plenary.nvim",
         'nvim-tree/nvim-web-devicons',
         "MunifTanjim/nui.nvim",
@@ -117,23 +115,23 @@ require('packer').startup(function(use)
         },
       })
     end
-  }
+  },
 
   -- Plugin that enables electric pairing for
   -- things like brackets
-  use {
+  {
     'windwp/nvim-autopairs',
     config = function()
       require('nvim-autopairs').setup({
         check_ts = true,
       })
     end
-  }
+  },
 
   -- Neogit is a magit like plugin for neovim. Here
   -- I setup the plugin with a keybind to access the
   -- magit menu
-  use {
+  {
     'TimUntersberger/neogit',
     config = function()
       local opts = {noremap=true, silent=true}
@@ -141,12 +139,12 @@ require('packer').startup(function(use)
         vim.keymap.set('n', '<leader>gm', "<cmd>Neogit<CR>", opts),
       }
     end,
-    requires = {
+    dependencies = {
       'nvim-lua/plenary.nvim'
     }
-  }
+  },
 
-  use {
+  {
     'folke/which-key.nvim',
     config = function()
       require("which-key").setup {
@@ -155,15 +153,15 @@ require('packer').startup(function(use)
         },
       }
     end
-  }
+  },
 
-  use { 'windwp/nvim-ts-autotag' }
+  'windwp/nvim-ts-autotag',
 
   -- Treesitter is a almost a required plugin for neovim
   -- that makes reading, code a lot better.
-  use {
+  {
     'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate',
+    build = ':TSUpdate',
     config = function()
       require('nvim-treesitter.configs').setup {
         ensure_installed = { "c", "lua", "rust", "c_sharp", "python", "bash", "java", "astro" },
@@ -185,13 +183,14 @@ require('packer').startup(function(use)
         }
       }
     end
-  }
-  use 'nvim-treesitter/nvim-treesitter-refactor'
+  },
 
-  -- Telescope makes finding files in your project easy. 
-  use {
+  'nvim-treesitter/nvim-treesitter-refactor',
+
+  -- Telescope makes finding files in your project easy.
+  {
     'nvim-telescope/telescope.nvim',
-    requires = { {'nvim-lua/plenary.nvim'} },
+    dependencies = { {'nvim-lua/plenary.nvim'} },
     config = function()
       local opts = {noremap=true, silent=true}
       vim.keymap.set('n', '<leader>ff', "<cmd>Telescope find_files<CR>", opts)
@@ -200,16 +199,16 @@ require('packer').startup(function(use)
       vim.keymap.set('n', '<leader>fb', "<cmd>Telescope buffers<CR>", opts)
       vim.keymap.set('n', '<leader>fh', "<cmd>Telescope help_tags<CR>", opts)
     end
-  }
+  },
 
 
   -- Project is a plugin that makes sure your vim is rooted at the
   -- project's root of the project you just opened. It also keeps
   -- track of their location, and integrating it with telescope
   -- makes opening your projects really easy
-  use {
+  {
     'ahmedkhalf/project.nvim',
-    requires = 'nvim-telescope/telescope.nvim',
+    dependencies = 'nvim-telescope/telescope.nvim',
     config = function()
       local opts = {noremap=true, silent=true}
       require("project_nvim").setup {
@@ -218,37 +217,37 @@ require('packer').startup(function(use)
         vim.keymap.set('n', '<leader>pp', "<cmd>Telescope projects<CR>", opts)
       }
     end
-  }
+  },
 
-  use {
+  {
     'nvim-telescope/telescope-ui-select.nvim',
-    requires = 'nvim-telescope/telescope.nvim',
+    dependencies = 'nvim-telescope/telescope.nvim',
     config = function()
       require('telescope').load_extension('ui-select')
     end
-  }
+  },
 
-  use {
+  {
       'folke/todo-comments.nvim',
-      requires = 'nvim-lua/plenary.nvim',
+      dependencies = 'nvim-lua/plenary.nvim',
       config = function ()
           require("todo-comments").setup {
 
           }
       end
-  }
+  },
 
 
-  use {
+  {
       'norcalli/nvim-colorizer.lua',
       config = function ()
           require('colorizer').setup()
       end
-  }
+  },
 
-  use {
+  {
       'akinsho/toggleterm.nvim',
-      tag = '*',
+      version = '*',
       config = function ()
         require("toggleterm").setup()
 
@@ -265,40 +264,41 @@ require('packer').startup(function(use)
             ["<C-l>"] = { [[<cmd>wincmd l<CR>]], "Escape Terminal right"},
         }, {mode = "t"})
       end
-  }
+  },
 
   -- All the plugins below here are too complicated to setup
   -- inside the packer config, so the setup is found at the
-  use 'williamboman/mason.nvim'
-  use 'williamboman/mason-lspconfig.nvim'
-  use 'neovim/nvim-lspconfig'
+  'williamboman/mason.nvim',
+  'williamboman/mason-lspconfig.nvim',
+  'neovim/nvim-lspconfig',
 
-  use 'jose-elias-alvarez/null-ls.nvim'
-  use 'MunifTanjim/prettier.nvim'
+  'jose-elias-alvarez/null-ls.nvim',
+  'MunifTanjim/prettier.nvim',
 
-  use 'folke/lsp-colors.nvim'
+  'folke/lsp-colors.nvim',
 
-  use {
+  {
     'ms-jpq/coq_nvim',
     branch = "coq"
-  }
-  use {
+  },
+
+  {
     'ms-jpq/coq.artifacts',
     branch = "artifacts"
-  }
+  },
 
-  use {
+  {
     'ms-jpq/coq.thirdparty',
     branch = "3p"
-  }
+  },
 
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-cmdline'
-  use 'saadparwaiz1/cmp_luasnip'
-  use {
+  'hrsh7th/cmp-nvim-lsp',
+  'hrsh7th/nvim-cmp',
+  'hrsh7th/cmp-buffer',
+  'hrsh7th/cmp-path',
+  'hrsh7th/cmp-cmdline',
+  'saadparwaiz1/cmp_luasnip',
+  {
       "lewis6991/hover.nvim",
       config = function()
           require("hover").setup {
@@ -309,9 +309,9 @@ require('packer').startup(function(use)
               title = true,
           }
       end
-  }
+  },
 
-  use {
+  {
     'zbirenbaum/copilot.lua',
     cmd = 'Copilot',
     event = 'InsertEnter',
@@ -321,25 +321,23 @@ require('packer').startup(function(use)
         panel = { enable = false }
       })
     end,
-  }
+  },
 
 
-  use {
+  {
     'zbirenbaum/copilot-cmp',
     after = { 'copilot.lua' },
     config = function ()
       require('copilot_cmp').setup()
     end
-  }
+  },
 
 
-  use 'simrat39/rust-tools.nvim'
+  'simrat39/rust-tools.nvim',
 
-  use 'L3MON4D3/LuaSnip'
-  use 'rafamadriz/friendly-snippets'
-
-end)
-
+  'L3MON4D3/LuaSnip',
+  'rafamadriz/friendly-snippets',
+})
 
 require("main")
 require("lsp")
