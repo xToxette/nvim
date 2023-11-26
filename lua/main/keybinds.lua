@@ -32,6 +32,6 @@ wk.register({
   ["<leader>v"] = { name = "+view" },
   ["<leader>vo"] = { "<cmd>only<CR>", "Only"},
   ["<leader>vs"] = { name = "+split window" },
-  ["<leader>vsh"] = { "<cmd>split<CR>", "split horizontal"},
-  ["<leader>vsv"] = { "<cmd>vsplit<CR>", "split vertical"},
+  ["<leader>vsb"] = { "<cmd>split<CR>", "split horizontal"},
+  ["<leader>vsl"] = { "<cmd>vsplit<CR>", "split vertical"},
 })

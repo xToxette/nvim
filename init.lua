@@ -45,12 +45,12 @@ require("lazy").setup({
   { "jacoborus/tender.vim" },
 
   -- For transparent background
-  {
-    'tribela/vim-transparent',
-    config = function ()
-      -- vim.cmd("let g:transparent_groups += ['NormalFloat']")
-    end,
-  },
+  -- {
+  --   'tribela/vim-transparent',
+  --   config = function ()
+  --     -- vim.cmd("let g:transparent_groups += ['NormalFloat']")
+  --   end,
+  -- },
 
   {
     "glepnir/dashboard-nvim",
@@ -182,8 +182,17 @@ require("lazy").setup({
           }
         }
       }
+      require('nvim-treesitter.parsers').get_parser_configs().asm = {
+        install_info = {
+          url = 'https://github.com/rush-rs/tree-sitter-asm.git',
+          files = { 'src/parser.c' },
+          branch = 'main'
+        }
+      }
     end
   },
+
+  'rush-rs/tree-sitter-asm',
 
   'nvim-treesitter/nvim-treesitter-refactor',
 
@@ -253,7 +262,8 @@ require("lazy").setup({
 
         require('which-key').register({
             ["<leader>ut"] = { name = "+Terminal"},
-            ["<leader>utt"] = { "<cmd>ToggleTerm<CR>", " to window left"},
+            ["<leader>utt"] = { "<cmd>ToggleTerm<CR>", "Toggle terminal at the bottom"},
+            ["<C-t>"] = { "<cmd>ToggleTerm<CR>", "Toggle terminal at the bottom"},
         }, {mode = "n"})
 
         require('which-key').register({
@@ -262,6 +272,7 @@ require("lazy").setup({
             ["<C-j>"] = { [[<cmd>wincmd j<CR>]], "Escape Terminal down"},
             ["<C-k>"] = { [[<cmd>wincmd k<CR>]], "Escape Terminal up"},
             ["<C-l>"] = { [[<cmd>wincmd l<CR>]], "Escape Terminal right"},
+            ["<C-t>"] = { "<cmd>ToggleTerm<CR>", "Toggle terminal at the bottom"},
         }, {mode = "t"})
       end
   },
@@ -317,20 +328,18 @@ require("lazy").setup({
     event = 'InsertEnter',
     config = function()
       require('copilot').setup({
-        suggestion = { enable = false },
-        panel = { enable = false }
+        
       })
     end,
   },
 
-
-  {
-    'zbirenbaum/copilot-cmp',
-    after = { 'copilot.lua' },
-    config = function ()
-      require('copilot_cmp').setup()
-    end
-  },
+  -- {
+  --   'zbirenbaum/copilot-cmp',
+  --   after = { 'copilot.lua' },
+  --   config = function ()
+  --     require('copilot_cmp').setup()
+  --   end
+  -- },
 
 
   'simrat39/rust-tools.nvim',

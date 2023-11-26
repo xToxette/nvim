@@ -69,7 +69,7 @@ cmp.setup({
     end, {"i", "s", "c",})
   }),
   sources = {
-    { name = 'copilot', priority = 1 },
+    -- { name = 'copilot', priority = 1 },
     { name = 'nvim_lsp', priority = 2, keyword_length = 1 },
     { name = 'luasnip', priority = 3 },
     { name = 'buffer', priority = 4 },
